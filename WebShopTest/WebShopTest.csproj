@@ -196,6 +196,7 @@
       <DependentUpon>WebShopModel.edmx</DependentUpon>
       <LastGenOutput>WebShopModel.cs</LastGenOutput>
     </Content>
+    <Content Include="ScriptSQL\diagram.png" />
     <Content Include="ScriptSQL\Fullscript_webshopDataStorage.sql" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
