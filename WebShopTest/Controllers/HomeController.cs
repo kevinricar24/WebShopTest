@@ -8,6 +8,7 @@ namespace WebShopTest.Controllers
 {
     public class HomeController : Controller
     {
+
         [HttpPost]
         public ActionResult UpdateMode()
         {

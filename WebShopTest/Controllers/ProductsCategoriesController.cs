@@ -13,27 +13,45 @@ namespace WebShopTest.Controllers
     public class ProductsCategoriesController : Controller
     {
         private WebShopDataStorageEntities db = new WebShopDataStorageEntities();
+        private List<ProductsCategory> productscategoriesCache
+        {
+            get { return Session["productscategoriesCache"] as List<ProductsCategory>; }
+            set { Session["productscategoriesCache"] = value; }
+        }
+
+        public bool UsingInMemory()
+        {
+            if (Session["Storage"] == null || Session["Storage"].ToString().Equals("InDatabase"))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
         // GET: ProductsCategories
         public ActionResult Index()
         {
-            var productsCategories = db.ProductsCategories.Include(p => p.Category).Include(p => p.Product);
-            return View(productsCategories.ToList());
-        }
-
-        // GET: ProductsCategories/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
+            if (UsingInMemory())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (productscategoriesCache == null)
+                {
+                    productscategoriesCache = new List<ProductsCategory>() { new ProductsCategory
+                    {
+                        CategoryId = 1,
+                        ProductId = 1
+                    } };
+                }
+                return View(productscategoriesCache.ToList());
             }
-            ProductsCategory productsCategory = db.ProductsCategories.Find(id);
-            if (productsCategory == null)
+            else
             {
-                return HttpNotFound();
+                var productsCategories = db.ProductsCategories.Include(p => p.Category).Include(p => p.Product);
+                return View(productsCategories.ToList());
             }
-            return View(productsCategory);
+            
         }
 
         // GET: ProductsCategories/Create
@@ -53,11 +71,20 @@ namespace WebShopTest.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.ProductsCategories.Add(productsCategory);
-                db.SaveChanges();
+                if (UsingInMemory())
+                {
+                    productscategoriesCache.Add( new ProductsCategory() {
+                        ProductCategoryId = productsCategory.ProductCategoryId,
+                        CategoryId = productsCategory.CategoryId,
+                        ProductId = productsCategory.ProductId,
+                    });
+                }else
+                {
+                    db.ProductsCategories.Add(productsCategory);
+                    db.SaveChanges();
+                }
                 return RedirectToAction("Index");
             }
-
             ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", productsCategory.CategoryId);
             ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Title", productsCategory.ProductId);
             return View(productsCategory);

@@ -13,11 +13,43 @@ namespace WebShopTest.Controllers
     public class CategoriesController : Controller
     {
         private WebShopDataStorageEntities db = new WebShopDataStorageEntities();
+        private List<Category> categoriesCache
+        {
+            get { return Session["categoriesCache"] as List<Category>; }
+            set { Session["categoriesCache"] = value; }
+        }
 
+        public bool UsingInMemory()
+        {
+            if (Session["Storage"] == null || Session["Storage"].ToString().Equals("InDatabase"))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
         // GET: Categories
         public ActionResult Index()
         {
-            return View(db.Categories.ToList());
+            if (UsingInMemory())
+            {
+                if (categoriesCache == null)
+                {
+                    categoriesCache = new List<Category>() { new Category
+                    {
+                        CategoryId = 0,
+                        Name = "NameTest",
+                        Description = "DescriptionTest"
+                    } };
+                }
+                return View(categoriesCache.ToList());
+            }
+            else
+            {
+                return View(db.Categories.ToList());
+            }
         }
 
         // GET: Categories/Create
@@ -35,11 +67,22 @@ namespace WebShopTest.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Categories.Add(category);
-                db.SaveChanges();
+                if (UsingInMemory())
+                {
+                    categoriesCache.Add(new Category()
+                    {
+                        CategoryId = category.CategoryId,
+                        Name = category.Name,
+                        Description = category.Description
+                    });
+                }
+                else
+                {
+                    db.Categories.Add(category);
+                    db.SaveChanges();
+                }
                 return RedirectToAction("Index");
             }
-
             return View(category);
         }
 

@@ -14,10 +14,45 @@ namespace WebShopTest.Controllers
     {
         private WebShopDataStorageEntities db = new WebShopDataStorageEntities();
 
+        private List<Product> productsCache
+        {
+            get { return Session["productsCache"] as List<Product>; }
+            set { Session["productsCache"] = value; }
+        }
+
+        public bool UsingInMemory()
+        {
+            if (Session["Storage"] == null || Session["Storage"].ToString().Equals("InDatabase"))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         // GET: Products
         public ActionResult Index()
         {
-            return View(db.Products.ToList());
+            if (UsingInMemory())
+            {
+                if (productsCache == null)
+                {
+                    productsCache = new List<Product>() { new Product {
+                        ProductId = 0,
+                        Number = "NumberTest",
+                        Title = "TitleTest",
+                        Price = 0,
+                        Description = "DescriptionTest"
+                    } };
+                }
+                return View(productsCache.ToList());
+            }
+            else
+            {
+                return View(db.Products.ToList());
+            }
         }
 
         // GET: Products/Create
@@ -35,11 +70,24 @@ namespace WebShopTest.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Products.Add(product);
-                db.SaveChanges();
+                if (UsingInMemory())
+                {
+                    productsCache.Add(new Product()
+                    {
+                        ProductId = product.ProductId,
+                        Number = product.Number,
+                        Title = product.Title,
+                        Price = product.Price,
+                        Description = product.Description
+                    });
+                }
+                else
+                {
+                    db.Products.Add(product);
+                    db.SaveChanges();
+                }
                 return RedirectToAction("Index");
             }
-
             return View(product);
         }
 
