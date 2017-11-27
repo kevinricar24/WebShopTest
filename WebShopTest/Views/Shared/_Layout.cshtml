@@ -23,6 +23,22 @@
                     <li>@Html.ActionLink("Category", "Index", "Categories")</li>
                     <li>@Html.ActionLink("Product", "Index", "Products")</li>
                     <li>@Html.ActionLink("ProducstByCategory", "Index", "ProductsCategories")</li>
+                    <li>
+                        <form action="Home/UpdateMode" method="post">
+                            <select id="typeid" name="typeid">
+                                @if (Session["Storage"] == null || Session["Storage"].ToString() == "InDatabase")
+                                {
+                                    <option value="InDatabase" selected="selected">Database</option>
+                                    <option value="InMemory">Memory</option>
+                                }
+                                else
+                                {
+                                    <option value="InDatabase">Database</option>
+                                    <option value="InMemory" selected="selected">Memory</option>
+                                }
+                            </select>
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -38,5 +54,10 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script>
+        $("#typeid").change(function() {
+    $(this).parents("form").submit();
+    });
+    </script>
 </body>
 </html>
