@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0ab5e184ac7e4a3eb955eb09b762a2a5" Name="Diagram1">
+        <EntityTypeShape EntityType="WebShopDataStorageModel.Category" Width="1.5" PointX="6.625" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopDataStorageModel.Customer" Width="1.5" PointX="12.125" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopDataStorageModel.CustomersOrder" Width="1.875" PointX="9.5" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopDataStorageModel.Order" Width="1.5" PointX="6.875" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopDataStorageModel.OrdersProduct" Width="1.5" PointX="3.75" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopDataStorageModel.Product" Width="1.5" PointX="0.75" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebShopDataStorageModel.ProductsCategory" Width="1.75" PointX="3" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="WebShopDataStorageModel.FK_ProductsCategories_Category" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopDataStorageModel.FK_CustomersOrders_Customer1" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopDataStorageModel.FK_CustomersOrders_Order1" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopDataStorageModel.FK_OrdersProducts_Order1" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopDataStorageModel.FK_OrdersProducts_Product1" ManuallyRouted="false" />
+        <AssociationConnector Association="WebShopDataStorageModel.FK_ProductsCategories_Product" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
